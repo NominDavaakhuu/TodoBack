@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TodoBack.Services.Interfaces;
 
-namespace TodoBack.Services
+namespace TodoBack.Services.Implementations
 {
     public class PasswordHasher: IPasswordHasher
     {

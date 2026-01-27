@@ -44,12 +44,6 @@
                 context.SaveChanges();
             }
             var seededUser = context.Users.First(u => u.UsernameNormalized == usernameNorm);
-
-            context.Categories.AddOrUpdate(
-                c => new { c.UserId, c.Name },  // uniqueness key for AddOrUpdate
-                new Category { UserId = seededUser.Id, Name = "General" }
-            );
-            context.SaveChanges();
         }
         private static string Normalize(string input)=> (input ?? string.Empty).Trim().ToUpperInvariant();
     }

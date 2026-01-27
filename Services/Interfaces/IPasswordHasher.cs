@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TodoBack.Services
+namespace TodoBack.Services.Interfaces
 {
     public interface IPasswordHasher
     {

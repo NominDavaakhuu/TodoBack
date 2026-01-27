@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
+using TodoBack.App_Start;
 
 namespace TodoBack
 {
@@ -12,6 +13,12 @@ namespace TodoBack
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+
+            // if you're using Autofac, configure it with the same HttpConfiguration
+            AutofacConfig.Configure(GlobalConfiguration.Configuration);
+
+            // register swagger (after WebApi config is set up)
+            SwaggerConfig.Register();
         }
     }
 }

@@ -13,6 +13,5 @@ namespace TodoBack.Models
         [Required, MaxLength(40)]
         public string Name { get; set; } = string.Empty;
         public virtual ICollection<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
-        public object UserId { get; internal set; }
     }
 }
