@@ -28,8 +28,8 @@ namespace TodoBack.Services.Implementations
             if (string.IsNullOrWhiteSpace(dto?.Username) || string.IsNullOrWhiteSpace(dto?.Password))
                 return new AuthResult { Success = false, Error = "Username and password are required." };
 
-            if (await _users.UsernameExistsAsync(dto.Username))
-                return new AuthResult { Success = false, Error = "Username already exists." };
+            if (await _users.UserExistsAsync(dto.Username, dto.Email))
+                return new AuthResult { Success = false, Error = "User already exists." };
 
             var user = new User
             {
@@ -58,7 +58,6 @@ namespace TodoBack.Services.Implementations
 
             var user = await _users.GetByUsernameAsync(dto.UsernameOrEmail);
 
-            // Avoid user enumeration: same response for user-not-found and wrong password
             if (user == null || !_hasher.Verify(dto.Password, user.PasswordHash))
                 return new AuthResult { Success = false, Error = "Invalid username or password." };
 

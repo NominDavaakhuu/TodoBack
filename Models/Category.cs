@@ -12,6 +12,8 @@ namespace TodoBack.Models
 
         [Required, MaxLength(40)]
         public string Name { get; set; } = string.Empty;
+
+        [Newtonsoft.Json.JsonIgnore]
         public virtual ICollection<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
     }
 }

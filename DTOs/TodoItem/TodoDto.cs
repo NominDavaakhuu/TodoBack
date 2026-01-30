@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using TodoBack.Models;
@@ -10,6 +9,7 @@ namespace TodoBack.DTOs
     public class TodoDto
     {
         public long Id { get; set; }
+
         public string Title { get; set; } = string.Empty;
         public bool IsCompleted { get; set; }
 
@@ -17,6 +17,6 @@ namespace TodoBack.DTOs
         public DateTime? UpdatedAt { get; set; }
 
         public long? CategoryId { get; set; }
-        public long UserId { get; set; }
+        public int UserId { get; set; }
     }
 }

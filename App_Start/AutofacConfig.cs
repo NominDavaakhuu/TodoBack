@@ -4,6 +4,7 @@ using System;
 using System.Reflection;
 using System.Web.Http;
 using TodoBack.Data;
+using TodoBack.Models;
 using TodoBack.Repos.Implementations;
 using TodoBack.Repos.Interfaces;
 using TodoBack.Services.Implementations;
@@ -38,6 +39,18 @@ namespace TodoBack.App_Start
             builder.RegisterType<PasswordHasher>()
                 .As<IPasswordHasher>()
                 .InstancePerRequest();
+
+
+            // Register repository + service
+            builder.RegisterType<TodoItemRepository>()
+                   .As<ITodoItemRepository>()
+                   .InstancePerRequest();
+
+
+            builder.RegisterType<TodoItemService>()
+                           .As<ITodoItemService>()
+                           .InstancePerRequest();
+
 
             //build the container
             var container = builder.Build();

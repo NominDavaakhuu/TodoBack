@@ -20,5 +20,16 @@ namespace TodoBack
             // register swagger (after WebApi config is set up)
             SwaggerConfig.Register();
         }
+
+        protected void Application_PostAuthorizeRequest()
+        {
+            // Enable Session for Web API
+            if (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/api"))
+            {
+                HttpContext.Current.SetSessionStateBehavior(
+                    System.Web.SessionState.SessionStateBehavior.Required);
+            }
+        }
+
     }
 }
