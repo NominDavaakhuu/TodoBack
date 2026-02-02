@@ -140,6 +140,21 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\DTOs\Auth\LoginDto.cs">
+      <Link>DTOs\Auth\LoginDto.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DTOs\Auth\RegisterDto.cs">
+      <Link>DTOs\Auth\RegisterDto.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DTOs\TodoItem\TodoCreateDto.cs">
+      <Link>DTOs\TodoItem\TodoCreateDto.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DTOs\TodoItem\TodoDto.cs">
+      <Link>DTOs\TodoItem\TodoDto.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DTOs\TodoItem\UpdateTodo.cs">
+      <Link>DTOs\TodoItem\UpdateTodo.cs</Link>
+    </Compile>
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -147,12 +162,7 @@
     <Compile Include="Controllers\TodoItemController.cs" />
     <Compile Include="Data\TodoDbContext.cs" />
     <Compile Include="DTOs\Auth\AuthResult.cs" />
-    <Compile Include="DTOs\Auth\LoginDto.cs" />
-    <Compile Include="DTOs\Auth\RegisterDto.cs" />
-    <Compile Include="DTOs\TodoItem\TodoCreateDto.cs" />
-    <Compile Include="DTOs\TodoItem\TodoDto.cs" />
     <Compile Include="DTOs\TodoItem\TodoItemResult.cs" />
-    <Compile Include="DTOs\TodoItem\UpdateTodoDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
