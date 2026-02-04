@@ -140,6 +140,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\DTOs\ApiResponse.cs">
+      <Link>Models\ApiResponse.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\DTOs\Auth\LoginDto.cs">
       <Link>DTOs\Auth\LoginDto.cs</Link>
     </Compile>
@@ -162,7 +165,6 @@
     <Compile Include="Controllers\TodoItemController.cs" />
     <Compile Include="Data\TodoDbContext.cs" />
     <Compile Include="DTOs\Auth\AuthResult.cs" />
-    <Compile Include="DTOs\TodoItem\TodoItemResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -171,6 +173,10 @@
       <DependentUpon>202601270055187_InitialR.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Migrations\Configuration.cs" />
+    <Compile Include="Migrations\202602040039382_UpdateTodoSchema.cs" />
+    <Compile Include="Migrations\202602040039382_UpdateTodoSchema.Designer.cs">
+      <DependentUpon>202602040039382_UpdateTodoSchema.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\TodoItem.cs" />
     <Compile Include="Models\User.cs" />
@@ -202,6 +208,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Migrations\202601270055187_InitialR.resx">
       <DependentUpon>202601270055187_InitialR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202602040039382_UpdateTodoSchema.resx">
+      <DependentUpon>202602040039382_UpdateTodoSchema.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

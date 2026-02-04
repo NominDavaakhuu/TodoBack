@@ -24,7 +24,7 @@ namespace TodoBack.Repos.Implementations
             //return await _db.TodoItems.FindAsync(id);
         }
 
-        public async Task<IEnumerable<TodoItem>> GetByUserIdAsync(int userId)
+        public async Task<IEnumerable<TodoItem>> GetByUserIdAsync(long userId)
         {
             return await _db.TodoItems
                         .Where(t => t.UserId == userId && !t.IsDeleted)
@@ -47,7 +47,7 @@ namespace TodoBack.Repos.Implementations
             await _db.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(long id)
         {
             var itemToDelete = _db.TodoItems.SingleOrDefault(t => t.Id == id);
             if (itemToDelete == null) return false;
@@ -56,7 +56,7 @@ namespace TodoBack.Repos.Implementations
             return true;
         }
 
-        public async Task<int> DeleteByUserIdAsync(int userId)
+        public async Task<int> DeleteByUserIdAsync(long userId)
         {
             var items = await _db.TodoItems
                         .Where(t => t.UserId == userId)

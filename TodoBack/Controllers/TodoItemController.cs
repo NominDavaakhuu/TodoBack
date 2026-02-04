@@ -1,152 +1,181 @@
 ﻿using Shared.DTOs.TodoItem;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using TodoBack.DTOs;
-using TodoBack.DTOs.Auth;
 using TodoBack.Services.Interfaces;
 
 namespace TodoBack.Controllers
 {
-    [RoutePrefix("api/todo")]
+    [RoutePrefix("api/todoItem")]
     public class TodoItemController : ApiController
     {
         private readonly ITodoItemService _service;
+
         public TodoItemController(ITodoItemService service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         // ---------------------------
-        // Helper: get current userId
+        // Helper: get current userId (int stored in session)
         // ---------------------------
-        private int CurrentUserId
+        private long CurrentUserId
         {
             get
             {
-                // Web API doesn't expose Session directly; use HttpContext.Current
                 var session = HttpContext.Current?.Session;
                 if (session == null || session["UserId"] == null)
                     throw new HttpResponseException(HttpStatusCode.Unauthorized);
 
-                return (int)session["UserId"];
+                return (long)(int)session["UserId"];
             }
         }
 
-        // GET api/todo  (gets todos for current user)
+        // ========================================
+        // GET api/todoItem   (get all todos)
+        // ========================================
         [HttpGet]
         [Route("")]
         public async Task<IHttpActionResult> GetMyTodos()
         {
-            var userId = CurrentUserId;
-            var items = await _service.GetByUserIdAsync(userId);
-            return Ok(items);
+            long userId = CurrentUserId;
+
+            var response = await _service.GetByUserIdAsync(userId);
+
+            // NOTE: service always returns ApiResponse<T>
+            return Ok(response.Data);
         }
 
-
-        // GET api/todo/{id}  (get specific todo for current user)
+        // ========================================
+        // GET api/todoItem/{id}
+        // ========================================
         [HttpGet]
-        [Route("{id:int}", Name ="GetTodoById")]
-        public async Task<IHttpActionResult> Get(int id)
+        [Route("{id:long}", Name = "GetTodoById")]
+        public async Task<IHttpActionResult> Get(long id)
         {
             if (id <= 0)
                 return BadRequest("Invalid todo id.");
 
-            int userId = CurrentUserId;
+            long userId = CurrentUserId;
 
-            var item = await _service.GetByIdAsync(id, userId);
-            if (item == null)
+            var response = await _service.GetByIdAsync(id, userId);
+
+            if (!response.Success || response.Data == null)
                 return NotFound();
 
-            return Ok(item);
+            return Ok(response.Data);
         }
 
-        // POST api/todo
+        // ========================================
+        // POST api/todoItem  (create)
+        // ========================================
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> Create([FromBody] TodoCreateDto todoItem)
+        public async Task<IHttpActionResult> Create([FromBody] TodoCreateDto dto)
         {
-            if (todoItem == null) return BadRequest("Payload is required.");
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (dto == null)
+                return BadRequest("Payload is required.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var userId = CurrentUserId;
+            long userId = CurrentUserId;
 
-            var created = await _service.CreateAsync(userId, todoItem);
-            if (created == null)
-                return BadRequest("Unable to create todo item.");
-            return CreatedAtRoute("GetTodoById", new { id = created.Id }, created);
+            var response = await _service.CreateAsync(userId, dto);
 
+            if (!response.Success)
+                return BadRequest(response.Error);
+
+            return CreatedAtRoute(
+                "GetTodoById",
+                new { id = response.Data.Id },
+                response.Data
+            );
         }
 
-        // PUT api/todo/{id}
+        // ========================================
+        // PUT api/todoItem/{id}  (update)
+        // ========================================
         [HttpPut]
-        [Route("{id:int}")]
-        public async Task<IHttpActionResult> Update(int id, [FromBody] UpdateTodoDto todoItem)
+        [Route("{id:long}")]
+        public async Task<IHttpActionResult> Update(long id, [FromBody] UpdateTodoDto dto)
         {
-            if (todoItem == null) return BadRequest("Payload is required.");
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (id <= 0) return BadRequest("Invalid id.");
+            if (dto == null)
+                return BadRequest("Payload is required.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            if (id <= 0)
+                return BadRequest("Invalid id.");
 
-            var userId = CurrentUserId;
+            long userId = CurrentUserId;
 
-            var updated = await _service.UpdateAsync(userId, id, todoItem);
-            if (updated == null) return NotFound(); // not found or not owned
+            var response = await _service.UpdateAsync(userId, id, dto);
 
-            return Ok(updated);
+            if (!response.Success || response.Data == null)
+                return NotFound();
+
+            return Ok(response.Data);
         }
 
-
-        // DELETE api/todo/{id}
+        // ========================================
+        // DELETE api/todoItem/{id}
+        // ========================================
         [HttpDelete]
-        [Route("{id:int}")]
-        public async Task<IHttpActionResult> Delete(int id)
+        [Route("{id:long}")]
+        public async Task<IHttpActionResult> Delete(long id)
         {
-            if (id <= 0) return BadRequest("Invalid id.");
+            if (id <= 0)
+                return BadRequest("Invalid id.");
 
-            var userId = CurrentUserId;
+            long userId = CurrentUserId;
 
-            var success = await _service.DeleteAsync(id, userId);
-            if (success == null) return NotFound();
+            var response = await _service.DeleteAsync(id, userId);
+
+            if (!response.Success)
+                return NotFound();
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-
-        // DELETE api/todo (delete all todos for current user)
+        // ========================================
+        // DELETE api/todoItem  (delete all user todos)
+        // ========================================
         [HttpDelete]
         [Route("")]
         public async Task<IHttpActionResult> DeleteMyTodos()
         {
-            var userId = CurrentUserId;
+            long userId = CurrentUserId;
 
-            // returns count deleted
-            var deletedCount = await _service.DeleteByUserIdAsync(userId);
-            if (deletedCount == 0) return NotFound();
+            var response = await _service.DeleteByUserIdAsync(userId);
+
+            if (!response.Success)
+                return BadRequest(response.Error);
+
+            if (response.Data == 0)
+                return NotFound();
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-
+        // ========================================
+        // PATCH api/todoItem/{id}/completed
+        // ========================================
         [HttpPatch]
-        [Route("{id:int}/completed")]
-        public async Task<IHttpActionResult> MarkCompleted(int id)
+        [Route("{id:long}/completed")]
+        public async Task<IHttpActionResult> MarkCompleted(long id)
         {
-            if (id <= 0) return BadRequest("Invalid id.");
+            if (id <= 0)
+                return BadRequest("Invalid id.");
 
-            int userId = CurrentUserId;
+            long userId = CurrentUserId;
 
-            var updated = await _service.MarkAsCompletedAsync(id, userId);
-            if (updated == null) return NotFound();
+            var response = await _service.MarkAsCompletedAsync(id, userId);
 
-            return Ok(updated);
+            if (!response.Success || response.Data == null)
+                return NotFound();
+
+            return Ok(response.Data);
         }
-
     }
 }

@@ -1,0 +1,28 @@
+﻿@model Shared.DTOs.TodoItem.TodoDto
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<p>Are you sure you want to delete: <strong>@Model.Title</strong>?</p>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+    </dl>
+
+
+    @using (Html.BeginForm("DeleteConfirmed", "TodoItem", new { id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-secondary" })
+    }
+
+</div>

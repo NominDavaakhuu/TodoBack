@@ -8,5 +8,6 @@ namespace Shared.DTOs.TodoItem
     {   
         public string Title { get; set; }
         public long? CategoryId { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }
