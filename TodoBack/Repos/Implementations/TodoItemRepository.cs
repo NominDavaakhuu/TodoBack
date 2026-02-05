@@ -55,17 +55,22 @@ namespace TodoBack.Repos.Implementations
             await _db.SaveChangesAsync();
             return true;
         }
-
         public async Task<int> DeleteByUserIdAsync(long userId)
         {
             var items = await _db.TodoItems
-                        .Where(t => t.UserId == userId)
-                        .ToListAsync();
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
 
-            _db.Entry(items).State = EntityState.Modified;
+            if (items.Count == 0)
+                return 0;
+
+            foreach (var item in items)
+            {
+                item.IsDeleted = true;
+            }
+
             await _db.SaveChangesAsync();
             return items.Count;
-
         }
     }
 }

@@ -6,3 +6,15 @@
 <h1>Hello!</h1>
 <h1 class="text-success">@ViewBag.Username</h1>
 
+@if (TempData["Flash.Message"] != null)
+{
+    var type = TempData["Flash.Type"]?.ToString() ?? "info";
+    <div class="alert alert-@type">@TempData["Flash.Message"]</div>
+}
+
+@Html.ActionLink(
+    "Delete all my notes",
+    "DeleteMyTodos",
+    "Account",
+    null,
+    new { @class = "btn btn-danger" })

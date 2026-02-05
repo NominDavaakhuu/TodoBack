@@ -1,4 +1,5 @@
 ﻿using Shared.DTOs.Auth;
+using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -72,6 +73,41 @@ public class AccountController : Controller
         }
     }
 
+    [HttpGet]
+    public async Task<ActionResult> DeleteMyTodos()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> DeleteMyTodosConfirmed()
+    {
+        try
+        {
+            var deleted = await Api.DeleteMyTodosAsync();
+
+            TempData["Flash.Type"] = deleted ? "success" : "info";
+            TempData["Flash.Message"] = deleted
+                ? "All your notes were deleted."
+                : "You don’t have any notes to delete.";
+
+            return RedirectToAction("Me");
+        }
+
+        catch (UnauthorizedAccessException)
+        {
+            TempData["Flash.Type"] = "warning";
+            TempData["Flash.Message"] = "Session expired. Please log in again.";
+            return RedirectToAction("Login");
+        }
+        catch
+        {
+            TempData["Flash.Type"] = "danger";
+            TempData["Flash.Message"] = "Unexpected error while deleting your notes.";
+            return RedirectToAction("Me");
+        }
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]

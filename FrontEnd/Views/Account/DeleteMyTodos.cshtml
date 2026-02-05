@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "DeleteMyTodos";
+}
+
+<h2>DeleteMyTodos</h2>
+
+@using (Html.BeginForm("DeleteMyTodosConfirmed", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Yes, delete</button>
+    @Html.ActionLink("Cancel", "Me", null, new { @class = "btn btn-secondary" })
+}
+

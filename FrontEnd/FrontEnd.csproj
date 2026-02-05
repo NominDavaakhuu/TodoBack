@@ -205,6 +205,7 @@
     <Content Include="Views\TodoItem\Edit.cshtml" />
     <Content Include="Views\TodoItem\Delete.cshtml" />
     <Content Include="Views\TodoItem\Details.cshtml" />
+    <Content Include="Views\Account\DeleteMyTodos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
