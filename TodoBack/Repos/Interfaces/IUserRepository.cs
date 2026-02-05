@@ -12,5 +12,6 @@ namespace TodoBack.Repos.Interfaces
         Task<User> GetByUsernameAsync(string username);
         Task<bool> UserExistsAsync(string username, string email);
         Task<User> CreateAsync(User user);
+        Task<User> GetByUserEmailAsync(string email);
     }
 }

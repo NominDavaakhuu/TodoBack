@@ -18,6 +18,8 @@ namespace TodoBack.Repos.Implementations
 
         public Task<User> GetByUsernameAsync(string username)
             => _db.Users.SingleOrDefaultAsync(u => u.Username == username);
+        public Task<User> GetByUserEmailAsync(string email)
+            => _db.Users.SingleOrDefaultAsync(u => u.Email == email);
 
         public Task<bool> UserExistsAsync(string username, string email)
             => _db.Users.AnyAsync(u => u.Username == username || u.Email == email);
