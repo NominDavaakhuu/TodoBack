@@ -15,7 +15,12 @@ namespace TodoBack
             AutofacConfig.Configure(config);
 
             //Enable CORS
-            var cors = new EnableCorsAttribute("*", "*", "*");
+            var cors = new EnableCorsAttribute("http://localhost:3000", "*", "*")
+
+            {
+                SupportsCredentials = true
+            };
+
             config.EnableCors(cors);
 
             // Web API routes
