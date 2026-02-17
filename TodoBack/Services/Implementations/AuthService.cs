@@ -54,13 +54,13 @@ namespace TodoBack.Services.Implementations
 
         public async Task<AuthResult> LoginAsync(LoginDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto?.UsernameOrEmail) || string.IsNullOrWhiteSpace(dto?.Password))
-                return new AuthResult { Success = false, Error = "Username and password are required." };
+            if (string.IsNullOrWhiteSpace(dto?.Email) || string.IsNullOrWhiteSpace(dto?.Password))
+                return new AuthResult { Success = false, Error = "Email and password are required." };
 
-            var user = await _users.GetByUsernameAsync(dto.UsernameOrEmail) ?? await _users.GetByUserEmailAsync(dto.UsernameOrEmail);
+            var user = await _users.GetByUsernameAsync(dto.Email) ?? await _users.GetByUserEmailAsync(dto.Email);
 
             if (user == null || !_hasher.Verify(dto.Password, user.PasswordHash))
-                return new AuthResult { Success = false, Error = "Invalid username or password." };
+                return new AuthResult { Success = false, Error = "Invalid email or password." };
 
             return new AuthResult
             {
