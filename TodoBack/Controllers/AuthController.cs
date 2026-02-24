@@ -58,9 +58,24 @@ namespace TodoBack.Controllers
         [Route("logout")]
         public IHttpActionResult Logout()
         {
-            var session = HttpContext.Current?.Session;
-            session?.Clear();
-            session?.Abandon();
+            var context = HttpContext.Current;
+
+            // 1. Kill server session
+            context?.Session?.Clear();
+            context?.Session?.Abandon();
+
+            // 2. Expire session cookie (THIS IS THE KEY PART)
+            if (context?.Request?.Cookies["ASP.NET_SessionId"] != null)
+            {
+                var cookie = new HttpCookie("ASP.NET_SessionId")
+                {
+                    Expires = DateTime.UtcNow.AddDays(-1),
+                    Value = string.Empty,
+                    Path = "/"
+                };
+                context.Response.Cookies.Add(cookie);
+            }
+
             return StatusCode(HttpStatusCode.NoContent);
         }
 
